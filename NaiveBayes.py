@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import PowerTransformer
 from sklearn.naive_bayes import GaussianNB
 from sklearn.datasets import make_blobs, make_classification
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -16,7 +16,7 @@ NB(X, y) fits data into the Gaussian Naive Bayes classifier and does grid search
 :return: 
     gs_NB: the fitted NB model
     gs_NB.best_params_: Dictionary contatining parameter names and their corresponding best values
-    accuracy_test: Testing accuracy of the model
+    accuracy_test: f1_score of the model
 '''
 
 
@@ -33,7 +33,7 @@ def NB(X, y):
  
     test_transformed = PowerTransformer().fit_transform(X_test)
     predict_test = gs_NB.predict(test_transformed)
-    accuracy_test = accuracy_score(y_test,predict_test)
+    accuracy_test = f1_score(y_test,predict_test)
 
     return gs_NB, gs_NB.best_params_, accuracy_test
 

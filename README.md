@@ -21,7 +21,8 @@ Link: https://docs.google.com/document/d/1RiR0BsdOug2UZ822Up0-FkCEGcv8ItKsyChaho
     * LSTM (Optional)
 
 5. **Regression**
-    * {}
+    * CNN
+    * LSTM
 
 6. **Unsupervised**
     * {lda}

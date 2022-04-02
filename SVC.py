@@ -4,20 +4,21 @@ SVC.py
 from sklearn.svm import SVC 
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.datasets import make_blobs, make_classification
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 import numpy as np
 import matplotlib.pyplot as plt
 
-'''
-svc(X, y) fits data into the Support Vector Classifier and does grid search to find the best var_smoothing parameter for classification
-:param X: n * m matrix (ndarray) containing vectors for classification
-:param y: n * 1 matrix (ndarray) containing expected output for corresponding vector in X
-:return: 
-    svc_model: the fitted SVC model
-    svc_model.best_params_: Dictionary contatining parameter names and their corresponding best values
-    accuracy_test: Testing accuracy of the model
-'''
+
 def svc(X, y):
+    '''
+    svc(X, y) fits data into the Support Vector Classifier and does grid search to find the best var_smoothing parameter for classification
+    :param X: n * m matrix (ndarray) containing vectors for classification
+    :param y: n * 1 matrix (ndarray) containing expected output for corresponding vector in X
+    :return: 
+        svc_model: the fitted SVC model
+        svc_model.best_params_: Dictionary contatining parameter names and their corresponding best values
+        accuracy_test: Testing accuracy of the model
+    '''
     classifier = SVC()
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
     param_grid_svc = {
@@ -28,7 +29,7 @@ def svc(X, y):
     svc_model = GridSearchCV(estimator=classifier, param_grid=param_grid_svc, verbose=1,scoring='accuracy')
     svc_model.fit(X_train, y_train)
     predict_test = svc_model.predict(X_test)
-    accuracy_test = accuracy_score(y_test,predict_test)
+    accuracy_test = f1_score(y_test,predict_test)
     return svc_model, svc_model.best_params_, accuracy_test
 
 

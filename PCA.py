@@ -4,27 +4,29 @@ PCA.py
 import numpy as np
 from sklearn.decomposition import PCA
 
-'''
-PCA(X, m) takes dataset X and reduces it to a target dimension with the dimensions that explain the most variance
-:param X: dataset, ndarray of dimension n * a
-:param m: target dimension
-:output: Shape of transformed dataset and explained variance ratio of each dimension
-:return: transformed dataset, ndarray of dimension n * m
-'''
+
 def Pca_M(X, m):
+    '''
+    PCA(X, m) takes dataset X and reduces it to a target dimension with the dimensions that explain the most variance
+    :param X: dataset, ndarray of dimension n * a
+    :param m: target dimension
+    :output: Shape of transformed dataset and explained variance ratio of each dimension
+    :return: transformed dataset, ndarray of dimension n * m
+    '''
     pca = PCA(n_components=m)
     red_X = pca.fit_transform(X)
     print("Shape of X:", red_X.shape)
     print("Explained variance ratio: ", pca.explained_variance_ratio_)
     return red_X
 
-'''
-PCA(X) takes dataset X and reduces it to dimensions such that at least 85% of variance is explained
-:param X: dataset, ndarray of dimension n * a
-:output: Shape of transformed dataset and explained variance ratio of each dimension
-:return: transformed dataset, ndarray of dimension n * m
-'''
+
 def Pca_T(X):
+    '''
+    PCA(X) takes dataset X and reduces it to dimensions such that at least 85% of variance is explained
+    :param X: dataset, ndarray of dimension n * a
+    :output: Shape of transformed dataset and explained variance ratio of each dimension
+    :return: transformed dataset, ndarray of dimension n * m
+    '''
     pca = PCA(n_components=min(X.shape[1], 100))
     red_X = pca.fit_transform(X)
     i = 0

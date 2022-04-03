@@ -9,7 +9,7 @@ from sklearn.datasets import make_classification, make_regression
 def XG_preprocess(X):
     pre_pipeline = Pipeline(
         steps=[("impute", SimpleImputer(strategy="mean")), 
-           ("scale", StandardScaler())]
+           ("scale", StandardScaler(with_mean=False))]
     )
 
     X_processed = pre_pipeline.fit_transform(X)
@@ -31,8 +31,8 @@ def XG_Classifier(X, y):
     xgbclassify.fit(X_train, y_train)
     preds = xgbclassify.predict(X_test)
 
-    score = f1_score(y_test, preds)
-    return xgbclassify, score
+    #score = f1_score(y_test, preds)
+    return xgbclassify, preds
 
 def XG_Regression(X,y):
     '''

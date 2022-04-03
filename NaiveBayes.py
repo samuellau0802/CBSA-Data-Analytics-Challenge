@@ -2,8 +2,8 @@
 NaiveBayes.py
 '''
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.preprocessing import PowerTransformer
-from sklearn.naive_bayes import GaussianNB
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.datasets import make_blobs, make_classification
 from sklearn.metrics import accuracy_score
 import numpy as np
@@ -22,20 +22,22 @@ NB(X, y) fits data into the Gaussian Naive Bayes classifier and does grid search
 
 
 def NB(X, y):
-    
-    classifier = GaussianNB()
+    classifier = MultinomialNB()
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
-    param_grid_nb = { 'var_smoothing': np.logspace(0,-9, num=20) }
+    # scaler = MinMaxScaler()
+    # X_train = scaler.fit_transform(X_train)
+    # X_train = scaler.fit_transform(X_train)
     
-    gs_NB = GridSearchCV(estimator=classifier, param_grid=param_grid_nb, verbose=0,scoring='accuracy')
-    train_transformed = PowerTransformer().fit_transform(X_train)
-    gs_NB.fit(train_transformed, y_train)
+    param_grid_nb = { 'alpha': np.logspace(0,-9, num=10) }
+    
+    multi_NB = GridSearchCV(estimator=classifier, param_grid=param_grid_nb, verbose=0,scoring='accuracy')
+    
+    multi_NB.fit(X_train, y_train)
  
-    test_transformed = PowerTransformer().fit_transform(X_test)
-    predict_test = gs_NB.predict(test_transformed)
+    predict_test = multi_NB.predict(X_test)
     accuracy_test = accuracy_score(y_test,predict_test)
 
-    return gs_NB, gs_NB.best_params_, accuracy_test
+    return multi_NB, multi_NB.best_params_, accuracy_test
 
 '''
 Sample usecase, testing on classification dataset with 100000 samples and 50 features

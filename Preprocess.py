@@ -9,24 +9,13 @@ import jieba
 from jieba.analyse.analyzer import ChineseAnalyzer
 from jieba import tokenize
 
-# load data as dataframe
-
-def load_dataframe(filename):
-    '''
-    Return dataframe
-    Load pickle as dataframe. 'filename' is the file name
-    '''
-    df = pd.read_pickle(filename)
-    return df
-
 # dataframe to list
 
-def load_data_from_pkl(name,x):
+def load_data_from_pkl(df,x):
     '''
     Return list
-    Load data from pickle. 'name' is file name. 'x' is column name
+    Load data from pickle. 'df' is dataframe. 'x' is column name
     '''
-    df = load_dataframe(name)
     headline = df.filter([x])
     headline = headline.to_numpy()
     headline = headline.tolist()
@@ -57,12 +46,11 @@ def remove_trash(temp):
     temp = temp.lstrip()                                # beginning space
     return temp
 
-def clean_content(file,col):
+def clean_content(df,col):
     '''
     Return dataframe
-    'file' is file name. 'col' is target column.
+    'df' is dataframe. 'col' is target column.
     '''
-    df = load_dataframe(file)
     df[col] = df[col].apply(remove_trash)
     return df
 

@@ -1,4 +1,6 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sentence_transformers import SentenceTransformer
+import pandas as pd
 
 def tfidf(df, max_df=1.0, min_df=1):
     '''
@@ -17,15 +19,19 @@ def tfidf(df, max_df=1.0, min_df=1):
     X = X.todense() # sprase to dense matrix
     return X, vectorizer.vocabulary_
 
-def transformer(df, model):
+def transformer(df, model_name='paraphrase-multilingual-mpnet-base-v2'):
     '''
-    sentence transformer converts the dataframe with raw text into a matrix of word embeddings. supports multi-GPU Encoding
+    sentence transformer converts the dataframe with raw text into a matrix of word embeddings. supports GPU Encoding
 
-    :param df: a dataframe that contains text columns, with n rows
+    :param df: a dataframe that contains text columns, with n rows / a series of strings
     :param model: pretrained model that you would like to use
 
     :return a n x 728 matrix
     '''
+    model = SentenceTransformer(model_name, device='cuda')
+    if isinstance(df, pd.Series):
+        embeddings = model.encode(list(df))
+    else:
+        embeddings = model.encode(list(df['text']))
 
-    embeddings = model.encode(list(df['text']), device='cuda', show_progress_bar=True)
     return embeddings

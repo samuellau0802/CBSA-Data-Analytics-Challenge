@@ -51,7 +51,12 @@ def clean_content(df,col):
     Return dataframe
     'df' is dataframe. 'col' is target column.
     '''
+    df = df[df['content'] != 'nan']
+    #???
+    df.dropna(subset = ['content'],inplace=True)
+    df.reset_index(inplace=True)
     df[col] = df[col].apply(remove_trash)
+    
     return df
 
 def df_col_to_list(df,col):
@@ -102,3 +107,53 @@ def preprocess(filename,col_name):
     result_df = combine_result(cleanlist,original)
     
     save_as_pkl('clean_'+col_name,result_df)
+
+# Read and load clean data
+
+def load_clean_data(filename):
+    '''
+    Return dataframe  
+    'filename' is the file name of the clean pkl
+    '''
+    clean = pd.read_pickle(filename)
+    
+    return clean
+
+# Tokenize
+
+def tokenization(text):
+    '''
+    Return str
+    '''
+    text = re.sub(' ','',text)
+    text = list(jieba.cut(text))
+    text = [re.sub(r'[^\w]', '', i) for i in text if re.sub(r'[^\w]', '', i) != '']
+    return ' '.join(text)
+
+# Save tokenize result
+
+def save_tokenized(name,df):
+    '''
+    No return
+    Save tokenized result as name_tokenized.pkl
+    '''
+    if os.path.exists(name+'_tokenized.pkl'):
+        os.remove(name+'_tokenized.pkl')
+    resultdf = pd.DataFrame(df)
+    resultdf.to_pickle(name+'_tokenized.pkl')
+
+# Tokenizing
+
+def tokenize(filename,col_name):
+    '''
+    Return dataframe
+    'filename' is the clean file name. 'col_name' is the column name
+    '''
+    df = load_clean_data(filename)
+    df[col_name] = df[col_name].dropna().astype(str)
+    df[col_name] = df[col_name].apply(tokenization)
+    df[col_name] = df[col_name].dropna().astype(str)
+    
+    save_tokenized(col_name,df)
+    
+    return df

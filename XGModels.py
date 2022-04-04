@@ -32,7 +32,7 @@ def XG_Classifier(X, y):
     preds = xgbclassify.predict(X_test)
 
     #score = f1_score(y_test, preds)
-    return xgbclassify, preds
+    return xgbclassify, preds, y_test
 
 def XG_Regression(X,y):
     '''

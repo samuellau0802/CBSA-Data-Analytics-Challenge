@@ -16,7 +16,7 @@ def tfidf(df, max_df=1.0, min_df=1):
 
     vectorizer = TfidfVectorizer(max_df=max_df, min_df=min_df)
     X = vectorizer.fit_transform(list(df['tokenized_text']))
-    X = X.todense() # sprase to dense matrix
+    #X = X.todense() # sprase to dense matrix
     return X, vectorizer.vocabulary_
 
 def transformer(df, model_name='paraphrase-multilingual-mpnet-base-v2'):
@@ -30,8 +30,8 @@ def transformer(df, model_name='paraphrase-multilingual-mpnet-base-v2'):
     '''
     model = SentenceTransformer(model_name, device='cuda')
     if isinstance(df, pd.Series):
-        embeddings = model.encode(list(df))
+        embeddings = model.encode(list(df), convert_to_tensor=True)
     else:
-        embeddings = model.encode(list(df['text']))
+        embeddings = model.encode(list(df['text']), convert_to_tensor=True)
 
     return embeddings

@@ -6,15 +6,14 @@ from gensim.models.coherencemodel import CoherenceModel
 import pyLDAvis.gensim_models
 import matplotlib.pyplot as plt
 
-DOC_CONTENT = 'content'
+DOC_CONTENT = 'Clean'
 DOC_ID = 'docid'
-COMMON_WORDS = []
+
+
 
 def formatting(data):
-    data = data[[DOC_ID, DOC_CONTENT]]
-    data[DOC_CONTENT] = data[DOC_CONTENT].apply(lambda x: [i for i in x.split(" ") if i not in COMMON_WORDS])
-    seg_list = data[DOC_CONTENT].tolist()
-
+    data['Clean'] = data['Clean'].apply(filter_sw)
+    seg_list = data['Clean'].tolist()
     return seg_list
 
 def genCorpora(seg_list):
@@ -24,8 +23,8 @@ def genCorpora(seg_list):
     return id2word, corpus
 
 def trainLDA(id2word, corpus, num_topics, texts):
-    lda_model = LDA(corpus=corpus, id2word=id2word, num_topics=num_topics, workers=7)
-    cv = CoherenceModel(texts=texts, corpus=corpus)
+    lda_model = LDA(corpus=corpus, id2word=id2word, num_topics=num_topics, workers=6)
+    cv = CoherenceModel(model=lda_model, corpus=corpus, texts=texts, coherence='u_mass').get_coherence()
 
     return lda_model, cv
 
@@ -39,10 +38,10 @@ def optim_LDA(id2word, corpus, texts):
         cv_list.append(cv)
 
     plt.figure()
-    plt.plot(range(3, 16, 3), cv_list)
+    plt.plot([i for i in range(3, 16, 3)], cv_list)
     plt.show()
 
-    return max(model_list, key=lambda x: cv_list[model_list.index(x)]), max(cv_list)
+    return model_list, cv_list
     
 def save_model(model, corpus):
     model.save('lda_optim.model')

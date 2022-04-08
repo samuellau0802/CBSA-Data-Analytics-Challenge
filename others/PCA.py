@@ -1,8 +1,9 @@
 '''
 PCA.py
 '''
+from asyncio import base_tasks
 import numpy as np
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA, IncrementalPCA
 
 
 def Pca_M(X, m):
@@ -18,7 +19,6 @@ def Pca_M(X, m):
     print("Shape of X:", red_X.shape)
     print("Explained variance ratio: ", pca.explained_variance_ratio_)
     return red_X
-
 
 def Pca_T(X):
     '''
@@ -39,6 +39,20 @@ def Pca_T(X):
     print("Explained variance ratio: ", pca.explained_variance_ratio_[:i])
     return red_X
 
+def iPca(X, m, b):
+    '''
+    iPCA(X, m) performs PCA in batch with batchsize = b
+    :param X: dataset, ndarray of dimension n * a
+    :param m: target dimension
+    :param b: batch size
+    :output: Shape of transformed dataset and explained variance ratio of each dimension
+    :return: transformed dataset, ndarray of dimension n * m
+    '''
+    pca = IncrementalPCA(n_components=m, batch_size=b)
+    red_X = pca.fit_transform(X)
+    print("Shape of X:", red_X.shape)
+    print("Explained variance ratio: ", pca.explained_variance_ratio_)
+    return red_X
 
 if __name__ == "__main__":
     test_X = np.array([[-1, -1, 3, 0], [-2, -1, -4, 2], [-3, -2, 0, 1], [1, 1, 1, 1], [2, 1, 2, 0], [3, 2, 5, 2]])
